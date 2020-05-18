@@ -15,7 +15,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "helmet": "^3.22.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "tmi.js": "^1.5.0"
   },
   "devDependencies": {
     "eslint": "^7.0.0",

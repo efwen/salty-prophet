@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const middlewares = require('./middlewares');
+const saltylog = require('./saltylog');
 
 const app = express();
 app.use(morgan('common'));
