@@ -4,20 +4,20 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const middlewares = require('./middlewares');
-const saltylog = require('./saltylog');
+const api = require('./api');
 
 const app = express();
 app.use(morgan('common'));
 app.use(helmet());
-app.use(cors({
-  origin: 'http://localhost:3000',
-}));
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'Hello World!',
+    message: 'hello there',
   });
 });
+
+app.use('/api', api);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
