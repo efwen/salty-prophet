@@ -15,8 +15,19 @@ const client = new tmi.Client({
 
 client.connect();
 
+let lastMessage = 'none';
+
 client.on('message', (channel, tags, message, self) => {
   if (tags['display-name'] === refBotName) {
     console.log(`${tags['display-name']}: ${message}`);
+    lastMessage = message;
   }
 });
+
+const getLastMessage = () => {
+  return lastMessage;
+};
+
+module.exports = {
+  getLastMessage,
+};

@@ -1,12 +1,12 @@
-const express = require('express');
+const {Router} = require('express');
 const saltylog = require('./saltylog');
 
-const router = express.Router();
+const router = Router(); // eslint-disable-line new-cap
 
 router.get('/', (req, res, next) => {
   try {
     res.json({
-      message: 'api response',
+      message: saltylog.getLastMessage(),
     });
   } catch (error) {
     next(error);
