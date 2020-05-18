@@ -16,5 +16,6 @@ module.exports = {
   },
   'rules': {
     'linebreak-style': 'off',
+    'keyword-spacing': 'off',
   },
 };
