@@ -1,6 +1,5 @@
-const API_URL = process.env.DEV_CFG == 'development' ? 'http://localhost:1313' : process.env.API_URL;
 
 export async function getLastMessage() {
-  const response = await fetch(`${API_URL}/api`);
+  const response = await fetch(`${process.env.REACT_APP_API_URL}:1313/api`);
   return response.json();
 }
