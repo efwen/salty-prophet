@@ -26,7 +26,7 @@ app.use('/api', api);
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
 
-const port = process.env.PORT || 1313;
+const port = process.env.API_PORT || 1313;
 app.listen(port, () => {
   console.log(`Listening at https://localhost:${port}`);
 });
