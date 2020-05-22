@@ -1,7 +1,6 @@
-let API_URL = (process.env.NODE_ENV === 'development') ? 'http://localhost' : process.env.REACT_APP_API_URL;
-let API_PORT = process.env.REACT_APP_API_PORT;
+let API_URL = (process.env.NODE_ENV === 'development') ? 'http://localhost:1313' : process.env.REACT_APP_API_URL;
 
 export async function getLastMessage() {
-  const response = await fetch(`${API_URL}:${API_PORT}/api`);
+  const response = await fetch(`${API_URL}/api/`);
   return response.json();
 }

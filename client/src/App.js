@@ -10,24 +10,20 @@ class LatestMessage extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const updateMessage = () => {
-      getLastMessage().then((response) => {
-        this.setState({value: response.message});
-      }).catch((error) => {
-        console.error(error);
-      });
-    }
-
-    updateMessage();
-    setInterval(updateMessage, 5000);
+  handleClick() {
+     getLastMessage().then((response) => {
+       this.setState({value: response.message});
+     }).catch((error) => {
+       console.error(error);
+     });
   }
+
 
   render() {
     return (
-      <p className="LatestMessage">
+      <button className="LatestMessage" onClick={() => this.handleClick()}>
         "{this.state.value}"
-      </p>
+      </button>
     )
   }
 }
