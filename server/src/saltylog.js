@@ -29,16 +29,12 @@ client.on('message', (channel, tags, message, self) => {
     console.log(`${tags['display-name']}: ${message}`);
 
     if(message.match(openMatchStr)) {
-      console.log('open');
       lastMessage = message;
     } else if(message.match(lockMatchStr)) {
-      console.log('match');
       lastMessage = message;
     } else if(message.match(endMatchStr)) {
-      console.log('end');
       lastMessage = message;
     } else if(message.match(modeSwitchStr)) {
-      console.log('mode');
       lastMessage = message;
     }
   }
@@ -49,11 +45,8 @@ const getLastMessage = () => {
 };
 
 const getFighter = async (id) => {
-  return db.getFighter(id)
-      .then((value) => {
-        return value;
-      })
-      .catch((err) => console.log(err));
+  console.log('saltylog.getfighter');
+  return db.getFighter(id);
 };
 
 module.exports = {

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const {Pool} = require('pg');
 const pool = new Pool({
   user: process.env.PGUSER,
@@ -8,6 +10,7 @@ const pool = new Pool({
 });
 
 pool.connect();
+
 
 const getFighter = async (id) => {
   const query = {
