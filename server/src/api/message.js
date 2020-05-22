@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const saltylog = require('./saltylog');
+const saltylog = require('../saltylog');
 
 const router = Router(); // eslint-disable-line new-cap
 

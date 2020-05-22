@@ -9,6 +9,18 @@ const pool = new Pool({
 
 pool.connect();
 
+const getFighter = async (id) => {
+  const query = {
+    text: 'SELECT * FROM Fighter WHERE id = $1',
+    values: [id],
+  };
+
+  return pool.query(query)
+      .catch((err) => {
+        throw err;
+      });
+};
+
 const getFighterID = async (name, tier) => {
   const query = {
     text: 'SELECT * FROM Fighter WHERE name = $1 AND tier = $2',
@@ -26,6 +38,7 @@ const submitMatch = async (matchData) => {
 };
 
 module.exports = {
+  getFighter,
   getFighterID,
   submitMatch,
 };

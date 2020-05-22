@@ -41,10 +41,6 @@ client.on('message', (channel, tags, message, self) => {
       console.log('mode');
       lastMessage = message;
     }
-
-    db.getFighterID('testerino', 'A')
-        .then((value) => console.log(value.rows))
-        .catch((err) => console.log(err));
   }
 });
 
@@ -52,6 +48,15 @@ const getLastMessage = () => {
   return lastMessage;
 };
 
+const getFighter = async (id) => {
+  return db.getFighter(id)
+      .then((value) => {
+        return value;
+      })
+      .catch((err) => console.log(err));
+};
+
 module.exports = {
   getLastMessage,
+  getFighter,
 };

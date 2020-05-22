@@ -6,20 +6,22 @@ const cors = require('cors');
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
-const api = require('./api');
+const apiMessage = require('./api/message');
+const apiFighter = require('./api/fighter');
 
 const app = express();
 app.use(morgan('common'));
 app.use(helmet());
 app.use(cors());
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.json({
-    message: 'hello there',
+    message: 'Welcome to the salty-prophet api!',
   });
 });
 
-app.use('/api', api);
+app.use('/api/message', apiMessage);
+app.use('/api/fighter', apiFighter);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
