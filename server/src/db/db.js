@@ -1,47 +1,42 @@
 require('dotenv').config();
+const mongoose = require('mongoose');
+const Fighter = require('./models/fighter');
 
-const {Pool} = require('pg');
-const pool = new Pool({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
-});
-
-pool.connect();
-
-
-const getFighter = async (id) => {
-  const query = {
-    text: 'SELECT * FROM Fighter WHERE id = $1',
-    values: [id],
-  };
-
-  return pool.query(query)
-      .catch((err) => {
-        throw err;
-      });
-};
+mongoose.connect(process.env.DB_URL,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log('connected to mongoDB');
+    })
+    .catch((error) => console.log(error));
 
 const getFighterID = async (name, tier) => {
-  const query = {
-    text: 'SELECT * FROM Fighter WHERE name = $1 AND tier = $2',
-    values: [name, tier],
-  };
+  const doc = await Fighter.findOne({
+    name: name,
+    tier: tier,
+  }).catch((err) => {
+    throw err;
+  });
 
-  return pool.query(query)
+  if(!doc) {
+    return null;
+  }
+
+  return doc._id;
+};
+
+const createFighter = async (name, tier) => {
+  const fighterEntry = new Fighter({name: name, tier: tier});
+  const res = await fighterEntry.save()
       .catch((err) => {
         throw err;
       });
-};
-
-const submitMatch = async (matchData) => {
-
+  return res._id;
 };
 
 module.exports = {
-  getFighter,
   getFighterID,
-  submitMatch,
+  createFighter,
 };

@@ -44,12 +44,21 @@ const getLastMessage = () => {
   return lastMessage;
 };
 
-const getFighter = async (id) => {
-  console.log('saltylog.getfighter');
-  return db.getFighter(id);
+const getOrCreateFighterID = async (name, tier) => {
+  const id = await db.getFighterID(name, tier)
+      .then((result) => {
+        if(result) {
+          return result;
+        }
+        return db.createFighter(name, tier);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  return id;
 };
 
 module.exports = {
   getLastMessage,
-  getFighter,
+  getOrCreateFighterID,
 };
