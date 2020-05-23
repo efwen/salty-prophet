@@ -16,8 +16,8 @@ const getFighterID = async (name, tier) => {
   const doc = await Fighter.findOne({
     name: name,
     tier: tier,
-  }).exec((err) => {
-    if(err) throw err;
+  }).catch((err) => {
+    throw err;
   });
 
   if(!doc) {
