@@ -8,7 +8,7 @@ mongoose.connect(process.env.DB_URL,
       useUnifiedTopology: true,
     })
     .then(() => {
-      console.log('connected to mongoDB');
+      console.log('Connected to MongoDB');
     })
     .catch((error) => console.log(error));
 
@@ -17,6 +17,7 @@ const getFighterID = async (name, tier) => {
     name: name,
     tier: tier,
   }).catch((err) => {
+    console.error('Failed to get fighter!');
     throw err;
   });
 
@@ -29,10 +30,10 @@ const getFighterID = async (name, tier) => {
 
 const createFighter = async (name, tier) => {
   const fighterEntry = new Fighter({name: name, tier: tier});
-  const res = await fighterEntry.save()
-      .catch((err) => {
-        throw err;
-      });
+  const res = await fighterEntry.save().catch((err) => {
+    console.error('db.createFighter Failed to create fighter!');
+    throw err;
+  });
   return res._id;
 };
 
