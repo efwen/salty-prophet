@@ -34,22 +34,17 @@ async function saveFighters(openData) {
   const redTier = openData[3] ? openData[3] : 'U';
   const blueTier = openData[4] ? openData[4] : redTier;
 
-  const getOrCreateFighter = async (name, tier) => {
-    return await db.getFighter(name, tier)
-        .then((result) => {
-          return (result) ? result : db.createFighter(name, tier);
-        });
-  };
-
-  const promises = [
-    getOrCreateFighter(openData[1], redTier),
-    getOrCreateFighter(openData[2], blueTier),
+  const upserts = [
+    db.upsertFighter(openData[1], redTier),
+    db.upsertFighter(openData[2], blueTier),
   ];
 
-  const res = await Promise.all(promises);
-  console.log('Fighter IDs:', res[0]._id, res[1]._id);
-  redFighter = res[0]._id;
-  blueFighter = res[1]._id;
+  Promise.all(upserts)
+      .then((results) => {
+        console.log('Fighter IDs:', results);
+        redFighter = results[0]._id;
+        blueFighter = results[1]._id;
+      });
 }
 
 let lastMessage = 'none';
@@ -59,9 +54,10 @@ client.on('message', (channel, tags, message, self) => {
     if(message.match(openMatchStr)) {
       console.log('----------------------------------------------');
       console.log(message);
-      saveFighters(openDataPatt.exec(message)).catch((err) => {
-        console.error(err.stack);
-      });
+      saveFighters(openDataPatt.exec(message))
+          .catch((err) => {
+            console.error(err.stack);
+          });
       lastMessage = message;
     } else if(message.match(lockMatchStr)) {
       console.log(message);

@@ -6,6 +6,7 @@ mongoose.connect(process.env.DB_URL,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
     })
     .then(() => {
       console.log('Connected to MongoDB');
@@ -22,15 +23,23 @@ const getFighter = async (name, tier) => {
   });
 };
 
-const createFighter = async (name, tier) => {
-  const fighterEntry = new Fighter({name: name, tier: tier});
-  return await fighterEntry.save().catch((err) => {
-    console.error('db.createFighter Failed to create fighter!');
-    throw err;
-  });
+const upsertFighter = async (name, tier) => {
+  const filter = {
+    name: name,
+    tier: tier,
+  };
+  const update = {};
+  const options = {
+    upsert: true,
+    new: true,
+    setDefaultOnInsert: true,
+  };
+
+  const doc = await Fighter.findOneAndUpdate(filter, update, options);
+  return doc._id;
 };
 
 module.exports = {
   getFighter,
-  createFighter,
+  upsertFighter,
 };
