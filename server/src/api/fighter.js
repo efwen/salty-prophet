@@ -6,7 +6,7 @@ const router = Router(); // eslint-disable-line new-cap
 router.get('/', (req, res, next) => {
   const fighters = saltylog.getCurrentFighters();
   res.json({
-    message: `[${fighters[0]}, ${fighters[1]}]`,
+    message: JSON.stringify(fighters),
   });
 });
 

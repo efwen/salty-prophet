@@ -6,7 +6,7 @@ const router = Router(); // eslint-disable-line new-cap
 router.get('/', (req, res, next) => {
   try {
     res.json({
-      message: saltylog.getLastMessage(),
+      message: saltylog.getCurrentMessage(),
     });
   } catch (error) {
     next(error);

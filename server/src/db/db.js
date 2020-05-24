@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Fighter = require('./models/fighter');
+const FighterModel = require('./models/fighter');
 
 mongoose.connect(process.env.DB_URL,
     {
@@ -13,20 +13,10 @@ mongoose.connect(process.env.DB_URL,
     })
     .catch((error) => console.log(error));
 
-const getFighter = async (name, tier) => {
-  return await Fighter.findOne({
-    name: name,
-    tier: tier,
-  }).catch((err) => {
-    console.error('Failed to get fighter!');
-    throw err;
-  });
-};
-
-const upsertFighter = async (name, tier) => {
+const upsertFighter = async (fighter) => {
   const filter = {
-    name: name,
-    tier: tier,
+    name: fighter.name,
+    tier: fighter.tier,
   };
   const update = {};
   const options = {
@@ -35,11 +25,24 @@ const upsertFighter = async (name, tier) => {
     setDefaultOnInsert: true,
   };
 
-  const doc = await Fighter.findOneAndUpdate(filter, update, options);
+  const doc = await FighterModel.findOneAndUpdate(filter, update, options);
   return doc._id;
 };
 
+async function saveFighters(fighters) {
+  const upserts = [
+    upsertFighter(fighters[0]),
+    upsertFighter(fighters[1]),
+  ];
+
+  return Promise.all(upserts)
+      .then((results) => {
+        fighters[0].id = results[0];
+        fighters[1].id = results[1];
+        return fighters;
+      });
+}
+
 module.exports = {
-  getFighter,
-  upsertFighter,
+  saveFighters,
 };
