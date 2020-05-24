@@ -27,17 +27,31 @@ const client = new tmi.Client({
 
 client.connect();
 
+let redFighter = null;
+let blueFighter = null;
+
 function saveFighters(openData) {
   const redTier = openData[3] ? openData[3] : 'U';
   const blueTier = openData[4] ? openData[4] : redTier;
 
+  const getOrCreateFighter = async (name, tier) => {
+    return await db.getFighter(name, tier)
+        .then((result) => {
+          return (result) ? result : db.createFighter(name, tier);
+        });
+  };
+
   const promises = [
-    getOrCreateFighterID(openData[1], redTier),
-    getOrCreateFighterID(openData[2], blueTier),
+    getOrCreateFighter(openData[1], redTier),
+    getOrCreateFighter(openData[2], blueTier),
   ];
 
   return Promise.all(promises)
-      .then((res) => console.log('Fighter IDs:', res));
+      .then((res) => {
+        console.log('Fighter IDs:', res[0]._id, res[1]._id);
+        redFighter = res[0]._id;
+        blueFighter = res[1]._id;
+      });
 }
 
 let lastMessage = 'none';
@@ -64,25 +78,16 @@ client.on('message', (channel, tags, message, self) => {
   }
 });
 
+// frontend requests
 const getLastMessage = () => {
   return lastMessage;
 };
 
-const getOrCreateFighterID = async (name, tier) => {
-  const id = await db.getFighterID(name, tier)
-      .then((result) => {
-        if(result) {
-          return result;
-        }
-        return db.createFighter(name, tier);
-      })
-      .catch((err) => {
-        throw err;
-      });
-  return id;
+const getCurrentFighters = () => {
+  return [redFighter, blueFighter];
 };
 
 module.exports = {
   getLastMessage,
-  getOrCreateFighterID,
+  getCurrentFighters,
 };
