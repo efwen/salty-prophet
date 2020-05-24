@@ -30,7 +30,7 @@ client.connect();
 let redFighter = null;
 let blueFighter = null;
 
-function saveFighters(openData) {
+async function saveFighters(openData) {
   const redTier = openData[3] ? openData[3] : 'U';
   const blueTier = openData[4] ? openData[4] : redTier;
 
@@ -46,12 +46,10 @@ function saveFighters(openData) {
     getOrCreateFighter(openData[2], blueTier),
   ];
 
-  return Promise.all(promises)
-      .then((res) => {
-        console.log('Fighter IDs:', res[0]._id, res[1]._id);
-        redFighter = res[0]._id;
-        blueFighter = res[1]._id;
-      });
+  const res = await Promise.all(promises);
+  console.log('Fighter IDs:', res[0]._id, res[1]._id);
+  redFighter = res[0]._id;
+  blueFighter = res[1]._id;
 }
 
 let lastMessage = 'none';
