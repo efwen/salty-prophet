@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const FighterModel = require('./models/fighter');
+const MatchModel = require('./models/match');
 
 mongoose.connect(process.env.DB_URL,
     {
@@ -43,6 +44,20 @@ async function saveFighters(fighters) {
       });
 }
 
+const saveMatch = async (matchData, mode) => {
+  await MatchModel.create({
+    startTime: matchData.startTime,
+    duration: matchData.duration,
+    fighters: [matchData.fighters[0].id, matchData.fighters[1].id],
+    pots: matchData.pots,
+    winner: matchData.winner.id,
+    mode: mode,
+  });
+
+  console.log('Match saved!');
+};
+
 module.exports = {
   saveFighters,
+  saveMatch,
 };

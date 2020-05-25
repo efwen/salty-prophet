@@ -101,9 +101,19 @@ client.on('message', (channel, tags, message, self) => {
 
       console.log(currentMatch);
 
-      currentMatch = new Match();
-      currentPhase = 0;
-      switchingModes = false;
+      const resetMatch = () => {
+        currentMatch = new Match();
+        currentPhase = 0;
+        switchingModes = false;
+      };
+
+      db.saveMatch(currentMatch, currentMode)
+          .then(resetMatch)
+          .catch((err) => {
+            console.error('Failed to submit match!');
+            console.error(err.stack);
+            resetMatch();
+          });
     } else if(message.match(modeSwitchStr)) {
       if(currentPhase == 2) {
         processModeSwitchData();
