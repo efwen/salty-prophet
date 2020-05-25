@@ -15,6 +15,6 @@ const fighterSchema = new Schema({
   tier: tierEnum,
 });
 
-const Fighter = mongoose.model('Fighter', fighterSchema);
+const FighterModel = mongoose.model('Fighter', fighterSchema);
 
-module.exports = Fighter;
+module.exports = FighterModel;
