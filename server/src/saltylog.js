@@ -57,7 +57,6 @@ async function processOpenData(openData) {
         {name: openData[2], tier: blueTier}])
       .then((docs) => {
         currentMatch.fighters = docs;
-        console.log(currentMatch);
       });
 }
 
