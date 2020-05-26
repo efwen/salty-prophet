@@ -1,12 +1,4 @@
 
-class Fighter {
-  constructor(name, tier) {
-    this.name = name;
-    this.tier = tier;
-    this.id = null;
-  }
-}
-
 class Match {
   constructor() {
     this.startTime = 0;
@@ -18,6 +10,5 @@ class Match {
 };
 
 module.exports = {
-  Fighter,
   Match,
 };

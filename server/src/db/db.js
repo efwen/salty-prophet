@@ -14,38 +14,29 @@ mongoose.connect(process.env.DB_URL,
     })
     .catch((error) => console.log(error));
 
-const upsertFighter = async (fighter) => {
+const upsertFighter = async (fighterKey, update) => {
   const filter = {
-    name: fighter.name,
-    tier: fighter.tier,
+    name: fighterKey.name,
+    tier: fighterKey.tier,
   };
-  const update = {};
   const options = {
     upsert: true,
     new: true,
     setDefaultOnInsert: true,
   };
 
-  const doc = await FighterModel.findOneAndUpdate(filter, update, options);
-  return doc._id;
+  return await FighterModel.findOneAndUpdate(filter, update, options);
 };
 
-async function saveFighters(fighters) {
-  const upserts = [
-    upsertFighter(fighters[0]),
-    upsertFighter(fighters[1]),
-  ];
-
-  return Promise.all(upserts)
-      .then((results) => {
-        fighters[0].id = results[0];
-        fighters[1].id = results[1];
-        return fighters;
-      });
+async function getFighters(fighterKeys) {
+  return Promise.all([
+    upsertFighter(fighterKeys[0], {}),
+    upsertFighter(fighterKeys[1], {}),
+  ]);
 }
 
 const saveMatch = async (matchData, mode) => {
-  await MatchModel.create({
+  return MatchModel.create({
     startTime: matchData.startTime,
     duration: matchData.duration,
     fighters: [matchData.fighters[0].id, matchData.fighters[1].id],
@@ -53,11 +44,9 @@ const saveMatch = async (matchData, mode) => {
     winner: matchData.winner.id,
     mode: mode,
   });
-
-  console.log('Match saved!');
 };
 
 module.exports = {
-  saveFighters,
+  getFighters,
   saveMatch,
 };
