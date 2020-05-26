@@ -35,6 +35,9 @@ async function getFighters(fighterKeys) {
   ]);
 }
 
+async function updateFighters(fighterDocs, matchDoc) {
+}
+
 const saveMatch = async (matchData, mode) => {
   return MatchModel.create({
     startTime: matchData.startTime,

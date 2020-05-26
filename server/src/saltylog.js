@@ -111,10 +111,7 @@ client.on('message', (channel, tags, message, self) => {
         console.log(currentMatch);
 
         db.saveMatch(currentMatch, currentMode)
-            .then((doc) => {
-              console.log('Match saved!');
-              console.log(doc);
-            })
+            .then((doc) => db.updateFighers(doc))
             .catch((err) => {
               console.error('Failed to submit match!');
               console.error(err.stack);
