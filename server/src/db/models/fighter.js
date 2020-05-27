@@ -17,6 +17,7 @@ const MatchRef = {
 const OccurenceCount = {
   type: Int32,
   min: 0,
+  default: 0,
 };
 
 const fighterSchema = new Schema({
@@ -29,10 +30,8 @@ const fighterSchema = new Schema({
   matchHistory: [MatchRef],
   totalMatches: OccurenceCount,
   totalWins: OccurenceCount,
-  championships: OccurenceCount,
-  runnerUps: OccurenceCount,
-  currentStreak: Int32,
-  bestStreak: Int32,
+  currentStreak: {type: Int32, default: 0},
+  bestStreak: {type: Int32, default: 0},
 });
 
 const FighterModel = mongoose.model('Fighter', fighterSchema);

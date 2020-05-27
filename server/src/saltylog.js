@@ -69,8 +69,8 @@ function processLockData(lockData) {
 }
 
 function processEndMatchData(endMatchData) {
-  currentMatch.winner = (endMatchData[1] === 'Red') ?
-    currentMatch.fighters[0] : currentMatch.fighters[1];
+  currentMatch.winnerId = (endMatchData[1] === 'Red') ?
+    currentMatch.fighters[0]._id : currentMatch.fighters[1]._id;
   if(!switchingModes) {
     currentMatch.duration = Math.floor(
         (Date.now() - currentMatch.startTime) / 1000);
@@ -108,10 +108,13 @@ client.on('message', (channel, tags, message, self) => {
     } else if(message.match(endMatchStr)) {
       if(currentPhase === phases.MATCH_OVER) {
         processEndMatchData(endDataPatt.exec(message));
-        console.log(currentMatch);
 
         db.saveMatch(currentMatch, currentMode)
-            .then((doc) => db.updateFighers(doc))
+            .then((doc) => db.updateFighters(currentMatch.fighters, doc))
+            .then((fighters) => {
+              console.log('fighters after update');
+              console.log(fighters);
+            })
             .catch((err) => {
               console.error('Failed to submit match!');
               console.error(err.stack);

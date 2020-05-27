@@ -23,7 +23,7 @@ const matchSchema = new Schema({
   duration: {type: Int32, min: 0},
   fighters: [FighterRef],
   pots: [PotType],
-  winner: FighterRef,
+  winnerId: FighterRef,
   mode: ModeEnum,
 });
 

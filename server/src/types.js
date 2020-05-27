@@ -5,7 +5,7 @@ class Match {
     this.duration = 0;
     this.fighters = [null, null];
     this.pots = [0, 0];
-    this.winner = null;
+    this.winnerId = null;
   }
 };
 
