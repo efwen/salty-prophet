@@ -21,7 +21,7 @@ const FighterRef = {
 const matchSchema = new Schema({
   startTime: Date,
   duration: {type: Int32, min: 0},
-  fighters: [FighterRef],
+  fighterIds: [FighterRef],
   pots: [PotType],
   winnerId: FighterRef,
   mode: ModeEnum,

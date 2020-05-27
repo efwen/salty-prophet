@@ -63,10 +63,10 @@ async function updateFighters(fighterDocs, matchDoc) {
     // if no recorded best streak yet, set to current streak (1 or -1)
     // otherwise set to greater of current best and new streak
     const bestStreak = (fighterDoc.bestStreak == 0) ?
-          streak : max(fighterDoc.bestStreak, streak);
+          streak : Math.max(fighterDoc.bestStreak, streak);
 
     return {
-      matchHistory: fighterDoc.matchHistory + matchId,
+      matchHistory: fighterDoc.matchHistory.concat([matchId]),
       totalMatches: fighterDoc.totalMatches + 1,
       totalWins: (fighterDoc._id === winnerId) ?
             fighterDoc.totalWins + 1 : fighterDoc.totalWins,
@@ -76,9 +76,9 @@ async function updateFighters(fighterDocs, matchDoc) {
   };
 
   return Promise.all([
-    updateFighterByID(matchDoc.fighters[0],
+    updateFighterByID(fighterDocs[0]._id,
         createUpdateObject(fighterDocs[0], matchDoc._id, matchDoc.winnerId)),
-    updateFighterByID(matchDoc.fighters[1],
+    updateFighterByID(fighterDocs[1]._id,
         createUpdateObject(fighterDocs[1], matchDoc._id, matchDoc.winnerId)),
   ]);
 }
@@ -87,7 +87,7 @@ const saveMatch = async (matchData, mode) => {
   return MatchModel.create({
     startTime: matchData.startTime,
     duration: matchData.duration,
-    fighters: [matchData.fighters[0].id, matchData.fighters[1].id],
+    fighterIds: [matchData.fighters[0].id, matchData.fighters[1].id],
     pots: matchData.pots,
     winnerId: matchData.winnerId,
     mode: mode,
