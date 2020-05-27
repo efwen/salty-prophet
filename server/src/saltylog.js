@@ -2,7 +2,6 @@
 // It to be submitted to the DB
 const tmi = require('tmi.js');
 const db = require('./db/db.js');
-const {Match} = require('./types.js');
 
 const channelName = 'saltybet';
 const refBotName = 'WAIFU4u';
@@ -18,23 +17,32 @@ const openDataPatt = /(?:Bets are OPEN for )(.*) vs (.*)! (?:\((.) (?:\/ (.) )?T
 const lockDataPatt = /\$(\d{1,3}(?:,\d{1,3})*).*\$(\d{1,3}(?:,\d{1,3})*)/;
 const endDataPatt = /(Red|Blue)/;
 
-// state variables
-let currentMessage = 'no messages yet';
-const modes = {
-  MATCHMAKING: 'matchmaking',
-  TOURNAMENT: 'tournament',
-  EXHIBITIONS: 'exhibitions',
-};
-let currentMode = modes.MATCHMAKING;
 const phases = {
   BETS_OPEN: 'bets open',
   MATCH_RUNNING: 'match running',
   MATCH_OVER: 'match over',
 };
-let currentPhase = phases.BETS_OPEN;
-let currentMatch = new Match();
-let switchingModes = false;
+const modes = {
+  MATCHMAKING: 'matchmaking',
+  TOURNAMENT: 'tournament',
+  EXHIBITIONS: 'exhibitions',
+};
+class MatchState {
+  constructor() {
+    this.startTime = 0;
+    this.duration = 0;
+    this.fighters = [null, null];
+    this.pots = [0, 0];
+    this.winnerId = null;
+  }
+};
 
+// state variables
+let currentMessage = 'no messages yet';
+let currentMode = modes.MATCHMAKING;
+let currentPhase = phases.BETS_OPEN;
+let currentMatch = new MatchState();
+let switchingModes = false;
 
 const client = new tmi.Client({
   connection: {
@@ -90,7 +98,7 @@ client.on('message', (channel, tags, message, self) => {
 
     if(message.match(openMatchStr)) {
       if(currentPhase === phases.BETS_OPEN) {
-        currentMatch = new Match();
+        currentMatch = new MatchState();
         processOpenData(openDataPatt.exec(message))
             .then(() => {
               currentPhase = phases.MATCH_RUNNING;
