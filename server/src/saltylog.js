@@ -2,7 +2,6 @@
 // It to be submitted to the DB
 const tmi = require('tmi.js');
 const db = require('./db/db.js');
-const {Fighter, Match} = require('./types.js');
 
 const channelName = 'saltybet';
 const refBotName = 'WAIFU4u';
@@ -18,11 +17,31 @@ const openDataPatt = /(?:Bets are OPEN for )(.*) vs (.*)! (?:\((.) (?:\/ (.) )?T
 const lockDataPatt = /\$(\d{1,3}(?:,\d{1,3})*).*\$(\d{1,3}(?:,\d{1,3})*)/;
 const endDataPatt = /(Red|Blue)/;
 
+const phases = {
+  BETS_OPEN: 'bets open',
+  MATCH_RUNNING: 'match running',
+  MATCH_OVER: 'match over',
+};
+const modes = {
+  MATCHMAKING: 'matchmaking',
+  TOURNAMENT: 'tournament',
+  EXHIBITIONS: 'exhibitions',
+};
+class MatchState {
+  constructor() {
+    this.startTime = 0;
+    this.duration = 0;
+    this.fighters = [null, null];
+    this.pots = [0, 0];
+    this.winnerId = null;
+  }
+};
+
 // state variables
 let currentMessage = 'no messages yet';
-let currentMode = 'matchmaking';
-let currentPhase = 0; // phase 0: bets open, 1: bets locked, 2: match over
-let currentMatch = new Match();
+let currentMode = modes.MATCHMAKING;
+let currentPhase = phases.BETS_OPEN;
+let currentMatch = new MatchState();
 let switchingModes = false;
 
 const client = new tmi.Client({
@@ -35,14 +54,18 @@ const client = new tmi.Client({
 
 client.connect();
 
-function processOpenData(openData) {
+async function processOpenData(openData) {
   const redTier = openData[3] ? openData[3] : 'U';
   const blueTier = openData[4] ? openData[4] : redTier;
-  currentMatch.fighters = [
-    new Fighter(openData[1], redTier),
-    new Fighter(openData[2], blueTier),
-  ];
+
   currentMode = openData[5];
+
+  return db.getFighters(
+      [{name: openData[1], tier: redTier},
+        {name: openData[2], tier: blueTier}])
+      .then((docs) => {
+        currentMatch.fighters = docs;
+      });
 }
 
 function processLockData(lockData) {
@@ -54,8 +77,8 @@ function processLockData(lockData) {
 }
 
 function processEndMatchData(endMatchData) {
-  currentMatch.winner = (endMatchData[1] === 'Red') ?
-    currentMatch.fighters[0] : currentMatch.fighters[1];
+  currentMatch.winnerId = (endMatchData[1] === 'Red') ?
+    currentMatch.fighters[0]._id : currentMatch.fighters[1]._id;
   if(!switchingModes) {
     currentMatch.duration = Math.floor(
         (Date.now() - currentMatch.startTime) / 1000);
@@ -70,52 +93,48 @@ function processModeSwitchData() {
 
 client.on('message', (channel, tags, message, self) => {
   if (tags['display-name'] === refBotName) {
+    currentMessage = message;
+    console.log(`${refBotName}: ${message}`);
+
     if(message.match(openMatchStr)) {
-      if(currentPhase != 0) return;
-      currentMessage = message;
-
-      currentMatch = new Match();
-
-      processOpenData(openDataPatt.exec(message));
-      db.saveFighters(currentMatch.fighters)
-          .then((fighters) => {
-            currentMatch.fighters = fighters;
-            currentPhase++;
-          })
-          .catch((err) => {
-            currentMatch = null;
-            currentPhase = 0;
-            console.error(err.stack);
-          });
+      if(currentPhase === phases.BETS_OPEN) {
+        currentMatch = new MatchState();
+        processOpenData(openDataPatt.exec(message))
+            .then(() => {
+              currentPhase = phases.MATCH_RUNNING;
+            })
+            .catch((err) => {
+              currentMatch = null;
+              console.error(err.stack);
+            });
+      }
     } else if(message.match(lockMatchStr)) {
-      if(currentPhase != 1) return;
-      currentMessage = message;
-
-      processLockData(lockDataPatt.exec(message));
-      currentPhase++;
+      if(currentPhase === phases.MATCH_RUNNING) {
+        processLockData(lockDataPatt.exec(message));
+        currentPhase = phases.MATCH_OVER;
+      }
     } else if(message.match(endMatchStr)) {
-      if(currentPhase != 2) return;
-      currentMessage = message;
+      if(currentPhase === phases.MATCH_OVER) {
+        processEndMatchData(endDataPatt.exec(message));
 
-      processEndMatchData(endDataPatt.exec(message));
-
-      console.log(currentMatch);
-
-      const resetMatch = () => {
-        currentMatch = new Match();
-        currentPhase = 0;
-        switchingModes = false;
-      };
-
-      db.saveMatch(currentMatch, currentMode)
-          .then(resetMatch)
-          .catch((err) => {
-            console.error('Failed to submit match!');
-            console.error(err.stack);
-            resetMatch();
-          });
+        db.saveMatch(currentMatch, currentMode)
+            .then((doc) => db.updateFighters(currentMatch.fighters, doc))
+            .then((fighters) => {
+              console.log('fighters after update');
+              console.log(fighters);
+            })
+            .catch((err) => {
+              console.error('Failed to submit match!');
+              console.error(err.stack);
+            })
+            .finally(() => {
+              currentMatch = null;
+              currentPhase = phases.BETS_OPEN;
+              switchingModes = false;
+            });
+      }
     } else if(message.match(modeSwitchStr)) {
-      if(currentPhase == 2) {
+      if(currentPhase == 'end') {
         processModeSwitchData();
       }
     }

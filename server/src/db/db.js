@@ -14,50 +14,88 @@ mongoose.connect(process.env.DB_URL,
     })
     .catch((error) => console.log(error));
 
-const upsertFighter = async (fighter) => {
+const upsertFighter = async (fighterKey, update) => {
   const filter = {
-    name: fighter.name,
-    tier: fighter.tier,
+    name: fighterKey.name,
+    tier: fighterKey.tier,
   };
-  const update = {};
   const options = {
     upsert: true,
     new: true,
     setDefaultOnInsert: true,
   };
 
-  const doc = await FighterModel.findOneAndUpdate(filter, update, options);
-  return doc._id;
+  return await FighterModel.findOneAndUpdate(filter, update, options);
 };
 
-async function saveFighters(fighters) {
-  const upserts = [
-    upsertFighter(fighters[0]),
-    upsertFighter(fighters[1]),
-  ];
+async function getFighters(fighterKeys) {
+  return Promise.all([
+    upsertFighter(fighterKeys[0], {}),
+    upsertFighter(fighterKeys[1], {}),
+  ]);
+}
 
-  return Promise.all(upserts)
-      .then((results) => {
-        fighters[0].id = results[0];
-        fighters[1].id = results[1];
-        return fighters;
-      });
+async function updateFighterByID(fighterId, toUpdate) {
+  const filter = {
+    _id: fighterId,
+  };
+  const options = {
+    new: true,
+  };
+  return await FighterModel.findOneAndUpdate(filter, toUpdate, options);
+}
+
+async function updateFighters(fighterDocs, matchDoc) {
+  console.log('updating fighters!');
+  console.log(fighterDocs);
+  console.log(matchDoc);
+
+  const createUpdateObject = (fighterDoc, matchId, winnerId) => {
+    // continue or reset streak depending on if the fighter won,
+    // and which direction the streak was
+    let streak = fighterDoc.currentStreak;
+    if(fighterDoc._id === winnerId) {
+      streak = (streak >= 0) ? streak + 1 : -1;
+    } else {
+      streak = (streak <= 0) ? streak - 1 : 1;
+    }
+
+    // if no recorded best streak yet, set to current streak (1 or -1)
+    // otherwise set to greater of current best and new streak
+    const bestStreak = (fighterDoc.bestStreak == 0) ?
+          streak : Math.max(fighterDoc.bestStreak, streak);
+
+    return {
+      matchHistory: fighterDoc.matchHistory.concat([matchId]),
+      totalMatches: fighterDoc.totalMatches + 1,
+      totalWins: (fighterDoc._id === winnerId) ?
+            fighterDoc.totalWins + 1 : fighterDoc.totalWins,
+      currentStreak: streak,
+      bestStreak: bestStreak,
+    };
+  };
+
+  return Promise.all([
+    updateFighterByID(fighterDocs[0]._id,
+        createUpdateObject(fighterDocs[0], matchDoc._id, matchDoc.winnerId)),
+    updateFighterByID(fighterDocs[1]._id,
+        createUpdateObject(fighterDocs[1], matchDoc._id, matchDoc.winnerId)),
+  ]);
 }
 
 const saveMatch = async (matchData, mode) => {
-  await MatchModel.create({
+  return MatchModel.create({
     startTime: matchData.startTime,
     duration: matchData.duration,
-    fighters: [matchData.fighters[0].id, matchData.fighters[1].id],
+    fighterIds: [matchData.fighters[0].id, matchData.fighters[1].id],
     pots: matchData.pots,
-    winner: matchData.winner.id,
+    winnerId: matchData.winnerId,
     mode: mode,
   });
-
-  console.log('Match saved!');
 };
 
 module.exports = {
-  saveFighters,
+  getFighters,
+  updateFighters,
   saveMatch,
 };

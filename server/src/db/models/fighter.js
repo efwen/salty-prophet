@@ -1,18 +1,37 @@
 const mongoose = require('mongoose');
+const Int32 = require('mongoose-int32');
 const Schema = mongoose.Schema;
 
-const tierEnum = {
+const TierEnum = {
   type: String,
   enum: ['P', 'B', 'A', 'S', 'X'],
-  required: true,
+  required: [true, 'Tier field required for Fighter schema'],
+  immutable: true,
+};
+
+const MatchRef = {
+  type: Schema.Types.ObjectId,
+  ref: 'Match',
+};
+
+const OccurenceCount = {
+  type: Int32,
+  min: 0,
+  default: 0,
 };
 
 const fighterSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'name field required for Fighter'],
+    required: [true, 'Name field required for Fighter schema'],
+    immutable: true,
   },
-  tier: tierEnum,
+  tier: TierEnum,
+  matchHistory: [MatchRef],
+  totalMatches: OccurenceCount,
+  totalWins: OccurenceCount,
+  currentStreak: {type: Int32, default: 0},
+  bestStreak: {type: Int32, default: 0},
 });
 
 const FighterModel = mongoose.model('Fighter', fighterSchema);

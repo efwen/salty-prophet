@@ -1,30 +1,30 @@
 const mongoose = require('mongoose');
-const FighterModel = require('./fighter');
+const Int32 = require('mongoose-int32');
 const Schema = mongoose.Schema;
 
-const modeEnum = {
+const ModeEnum = {
   type: String,
   enum: ['matchmaking', 'tournament', 'exhibitions'],
   required: true,
 };
 
-const potType = {
-  type: Number,
+const PotType = {
+  type: Int32,
   min: 0,
 };
 
-const fighterRef = {
+const FighterRef = {
   type: Schema.Types.ObjectId,
-  ref: FighterModel,
+  ref: 'Fighter',
 };
 
 const matchSchema = new Schema({
   startTime: Date,
-  duration: {type: Number, min: 0},
-  fighters: [fighterRef, fighterRef],
-  pots: [potType, potType],
-  winner: fighterRef,
-  mode: modeEnum,
+  duration: {type: Int32, min: 0},
+  fighterIds: [FighterRef],
+  pots: [PotType],
+  winnerId: FighterRef,
+  mode: ModeEnum,
 });
 
 const MatchModel = mongoose.model('Match', matchSchema);
