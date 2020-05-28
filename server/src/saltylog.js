@@ -1,10 +1,11 @@
 // Responsible for picking out the relevant data and forwarding
 // It to be submitted to the DB
+require('dotenv').config();
 const tmi = require('tmi.js');
 const db = require('./db/db.js');
 
-const channelName = 'saltybet';
-const refBotName = 'WAIFU4u';
+const channelName = process.env.CHANNEL;
+const refBotName = process.env.REF_BOT;
 
 // strings for identifying when to process a message
 const openMatchStr = 'Bets are OPEN';

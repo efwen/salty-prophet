@@ -1,4 +1,3 @@
-require('dotenv').config();
 const mongoose = require('mongoose');
 const FighterModel = require('./models/fighter');
 const MatchModel = require('./models/match');
