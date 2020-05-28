@@ -55,9 +55,9 @@ async function updateFighters(fighterDocs, matchDoc) {
     // and which direction the streak was
     let streak = fighterDoc.currentStreak;
     if(fighterDoc._id === winnerId) {
-      streak = (streak >= 0) ? streak + 1 : -1;
+      streak = (streak >= 0) ? streak + 1 : 1;
     } else {
-      streak = (streak <= 0) ? streak - 1 : 1;
+      streak = (streak <= 0) ? streak - 1 : -1;
     }
 
     // if no recorded best streak yet, set to current streak (1 or -1)
