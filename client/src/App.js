@@ -2,59 +2,102 @@ import React from 'react';
 import './App.css';
 import { getLastMessage, getFighter } from './api';
 
-class FetchButton extends React.Component {
-  constructor(props) {    
-    super(props);    
+
+class SaltybetMessage extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      text: 'Click to update',    
-      fetchFunc: null,
-    };
-  }
-  
-  handleClick(fetchFunc) {
-     fetchFunc().then((response) => {
-       this.setState({text: response.message});
-     }).catch((error) => {
-       console.error(error);
-     });
+      message: 'Wait for message from saltybet',
     }
+  }
+
+  componentDidMount() {
+    getLastMessage()
+         .then((response) => {
+           this.setState({
+             message: response.message,
+           });
+         })
+         .catch((err) => {
+           console.error(err);
+         });
+   }
 
   render() {
     return (
-      <button className="LatestMessage" onClick={() => this.handleClick(this.state.fetchFunc)}>
-        {this.state.text}
-      </button>
+      <h4 className="Saltybet-Message">
+        "{this.state.message}"
+      </h4>
+    );
+  }
+}
+class FighterData extends React.Component {
+  constructor(props) {    
+    super(props);    
+    this.state = {
+      text: 'Waiting for data...',    
+      fighter: null,
+    };
+  }
+  
+  componentDidMount() {
+   getFighter()
+        .then((response) => {
+          console.log(response);
+          this.setState({
+            fighter: response[this.props.idx],
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+  }
+
+  render() {
+    if(!this.state.fighter) {
+      return (
+        <h4 className="Fighter-Props">
+          {this.state.text}
+        </h4>
+      )
+    }
+    return (
+      <div className="Fighter-Props">
+        <h2>
+          {this.state.fighter.name}({this.state.fighter.tier} Tier)
+        </h2>
+        <h4>{this.state.fighter.totalMatches}</h4>
+        <h4>{this.state.fighter.totalWins}</h4>
+        <h4>{this.state.fighter.currentStreak}</h4>
+        <h4>{this.state.fighter.bestStreak}</h4>
+      </div>
     )
-  }
-}
-
-class MessageFetchButton extends FetchButton {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: 'Click to get last message',
-      fetchFunc: getLastMessage,
-    }
-  }
-}
-
-class FighterFetchButton extends FetchButton {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: 'Click to get fighter id = 1',
-      fetchFunc: getFighter,
-    }
   }
 }
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <MessageFetchButton />
-        <FighterFetchButton />
-      </header>
+      <div className="App-Header">
+        <h1>Salty Prophet</h1>
+      </div>
+      <div className="App-Body">
+        <SaltybetMessage />
+        <div className="Fighter-Stats-Zone">
+          <FighterData idx={0} />
+          <div className="Fighter-Prop-Names">
+            <h2>Fighter Stats</h2>
+            <h4>Matches Recorded</h4>
+            <h4>Wins</h4>
+            <h4>Current Streak</h4>
+            <h4>Best Streak</h4>
+          </div>
+          <FighterData idx={1} />
+        </div>
+      </div>
+      <div className="App-Footer">
+        &#169; 2020 Nicholas Carpenetti
+      </div>
     </div>
   );
 }

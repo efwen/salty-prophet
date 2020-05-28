@@ -2,13 +2,38 @@
   text-align: center;
 }
 
-.App-header {
+.App-Header {
   background-color: #282c34;
-  min-height: 100vh;
+  color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: calc(10px + 2vmin);
+  height: 10vh;
+  text-align: center;
+}
+
+.App-Body {
+  background-color: #282c34;
   color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 85vh;
+}
+
+.App-Footer {
+  background-color:  #282c34;
+  color: white;
+  height: 10vh;
+}
+
+.Fighter-Stats-Zone {
+  display:flex;
+}
+
+.Fighter-Prop-Names {
+  width: 40%;
+}
+
+.Fighter-Props {
+  width: 30%;
+  height: 100%;
 }
