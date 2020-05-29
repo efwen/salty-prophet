@@ -81,7 +81,7 @@ class FighterData extends React.Component {
     }
 
     let fighter = this.state.fighter;
-    let winRate = fighter.totalMatches === 0 ? 0 : fighter.totalWins / fighter.totalMatches;
+    let winRate = fighter.totalMatches === 0 ? 0 : fighter.totalWins / fighter.totalMatches * 100;
     return (
       <div className="Fighter-Props">
         <h2 className="Fighter-Name">
