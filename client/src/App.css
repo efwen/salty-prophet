@@ -1,25 +1,62 @@
+:root {
+  --base00: #2d2d2d;
+  --base01: #393939;
+  --base02: #515151;
+  --base03: #747369;
+  --base04: #a09f93;
+  --base05: #d3d0c8;
+  --base06: #e8e6df;
+  --base07: #f2f0ec;
+  --base08: #f2777a;
+  --base09: #f99157;
+  --base0a: #ffcc66;
+  --base0b: #99cc99;
+  --base0c: #66cccc;
+  --base0d: #6699cc;
+  --base0e: #cc99cc;
+  --base0f: #d27b53;
+}
+
 body {
   margin: 0;
-  background-color: #2d2d2d;
+  background-color: var(--base00);
 }
+
+a {
+  color: var(--base0d);
+  text-decoration: none;
+}
+
 
 .App {
   text-align: center;
 }
 
 .App-Header {
-  background-color: #393939;
-  color: white;
+  background-color: var(--base01);
+  color: var(--base07);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   height: 10vh;
   text-align: center;
 }
 
+.Title-Salt {
+  width: 64px;
+  height: 64px;
+  margin-block: auto;
+  margin-inline: 6rem;
+}
+
+.App-Title {
+  word-wrap: none;
+  margin-block: auto;
+}
+
 .App-Body {
-  background-color: #2d2d2d;
-  color: white;
-  max-width: 52rem;
+  background-color: var(--base00);
+  color: var(--base07);
+  max-width: 50rem;
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -28,20 +65,28 @@ body {
 }
 
 .App-Footer {
-  background-color:  #393939;
-  color: white;
-  height: 10vh;
+  background-color: var(--base01);
+  color: var(--base03);
+  height: 5vh;
+}
+
+.Fighter-Name {
+  color: var(--base08);
+}
+
+.Saltybet-Message {
+  color: var(--base0b);
 }
 
 .Fighter-Stats-Zone {
   display:flex;
+  color: var(--base05);
 }
 
 .Fighter-Prop-Names {
-  width: 40%;
+  width: 20%;
 }
 
 .Fighter-Props {
-  width: 30%;
-  height: 100%;
+  width: 40%;
 }
