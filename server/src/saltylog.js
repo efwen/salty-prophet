@@ -14,7 +14,7 @@ const endMatchStr = 'wins!';
 const modeSwitchStr = 'will start shortly.';
 
 // regex for extracting match data
-const openDataPatt = /(?:Bets are OPEN for )(.*) vs (.*)! (?:\((.) (?:\/ (.) )?Tier\))*.*(matchmaking|tournament|exhibitions)/; // eslint-disable-line max-len
+const openDataPatt = /(?:Bets are OPEN for )(.*) vs (.*)! (?:\((.|None) (?:\/ (.|None) )?Tier\))*.*(matchmaking|tournament|exhibitions)/; // eslint-disable-line max-len
 const lockDataPatt = /\$(\d{1,3}(?:,\d{1,3})*).*\$(\d{1,3}(?:,\d{1,3})*)/;
 const endDataPatt = /(Red|Blue)/;
 
@@ -56,7 +56,7 @@ const client = new tmi.Client({
 client.connect();
 
 async function processOpenData(openData) {
-  const redTier = openData[3] ? openData[3] : 'U';
+  const redTier = openData[3] ? openData[3] : 'None';
   const blueTier = openData[4] ? openData[4] : redTier;
 
   currentMode = openData[5];

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const TierEnum = {
   type: String,
-  enum: ['P', 'B', 'A', 'S', 'X'],
+  enum: ['P', 'B', 'A', 'S', 'X', 'None'],
   required: [true, 'Tier field required for Fighter schema'],
   immutable: true,
 };
