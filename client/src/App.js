@@ -11,16 +11,22 @@ class SaltybetMessage extends React.Component {
     }
   }
 
+
   componentDidMount() {
-    getLastMessage()
-         .then((response) => {
-           this.setState({
-             message: response.message,
-           });
-         })
-         .catch((err) => {
-           console.error(err);
-         });
+    const updateMessage = () => {
+        getLastMessage()
+             .then((response) => {
+               this.setState({
+                 message: response.message,
+               });
+             })
+             .catch((err) => {
+               console.error(err);
+             });
+    }
+
+    updateMessage();
+    setInterval(updateMessage, 5000);
    }
 
   render() {
@@ -41,7 +47,8 @@ class FighterData extends React.Component {
   }
   
   componentDidMount() {
-   getFighter()
+   const updateFighter = () => {
+     getFighter()
         .then((response) => {
           console.log(response);
           this.setState({
@@ -51,6 +58,10 @@ class FighterData extends React.Component {
         .catch((err) => {
           console.error(err);
         });
+   }
+
+   updateFighter();
+   setInterval(updateFighter, 5000);
   }
 
   render() {
