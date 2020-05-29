@@ -50,7 +50,6 @@ class FighterData extends React.Component {
    const updateFighter = () => {
      getFighter()
         .then((response) => {
-          console.log(response);
           this.setState({
             fighter: response[this.props.idx],
           });
