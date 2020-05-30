@@ -10,7 +10,7 @@ const apiMessage = require('./api/message');
 const apiFighter = require('./api/fighter');
 
 const app = express();
-app.use(morgan('common'));
+app.use(morgan(':req[X-Forwarded-For] :method :url :status :response-time ms :res[content-length]')); 
 app.use(helmet());
 app.use(cors());
 
