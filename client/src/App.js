@@ -89,7 +89,7 @@ class FighterData extends React.Component {
         </h2>
         <h4>{fighter.tier}</h4>
         <h4>{fighter.totalMatches}</h4>
-        <h4>{fighter.totalWins}({winRate}%)</h4>
+        <h4>{fighter.totalWins}({winRate.toFixed(2)}%)</h4>
         <h4>{fighter.currentStreak}</h4>
         <h4>{fighter.bestStreak}</h4>
       </div>
