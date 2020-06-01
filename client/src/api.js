@@ -44,7 +44,7 @@ function getFighterData() {
   return APIState.fighterData;
 }
 
-module.exports = {
+export default {
   getLastMessage,
   getFighterData,
 }

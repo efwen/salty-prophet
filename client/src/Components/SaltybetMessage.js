@@ -1,5 +1,5 @@
 import React from 'react';
-import {getLastMessage} from '../API';
+import API from '../API';
 
 class SaltybetMessage extends React.Component {
   constructor(props) {
@@ -19,14 +19,14 @@ class SaltybetMessage extends React.Component {
 
   updateMessage() {
     this.setState({
-      message: getLastMessage(),
+      message: API.getLastMessage(),
     });
   }
 
   render() {
     return (
       <div className="Saltybet-Message">
-        "{getLastMessage()}"
+        "{this.state.message}"
       </div>
     );
   }

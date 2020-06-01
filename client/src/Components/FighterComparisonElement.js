@@ -1,5 +1,5 @@
 import React from 'react';
-import {getFighterData} from '../API';
+import API from '../API';
 
 class FighterComparisonElement extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class FighterComparisonElement extends React.Component {
   }
 
   updateValues() {
-    const fighterData = getFighterData();
+    const fighterData = API.getFighterData();
     if(fighterData && fighterData[0] && fighterData[1]) {
       this.setState({
         redValue: fighterData[0][this.props.propName],
