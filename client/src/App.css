@@ -19,6 +19,9 @@
 
 body {
   margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   background-color: var(--base00);
 }
 
@@ -26,7 +29,6 @@ a {
   color: var(--base0d);
   text-decoration: none;
 }
-
 
 .App {
   text-align: center;
@@ -37,56 +39,69 @@ a {
   color: var(--base07);
   display: flex;
   justify-content: center;
-  height: 10vh;
-  text-align: center;
+  align-items: center;
+  height: 6rem;
 }
 
-.Title-Salt {
-  width: 64px;
-  height: 64px;
+.Header-Salt {
+  max-width: 4rem;
+  max-height: 4rem;
   margin-block: auto;
-  margin-inline: 6rem;
+  margin-inline: .5rem;
 }
 
 .App-Title {
-  word-wrap: none;
-  margin-block: auto;
+  color: var(--base07);
 }
+
 
 .App-Body {
   background-color: var(--base00);
   color: var(--base07);
-  max-width: 50rem;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 85vh;
+  max-width: 30rem;
+  min-height: 80vh;
+  margin-inline: auto;
 }
 
 .App-Footer {
   background-color: var(--base01);
   color: var(--base03);
-  height: 5vh;
 }
 
-.Fighter-Name {
+.Fighter-Comparison {
+  display: grid;
+  grid-gap: 10px;
+}
+
+.Fighter-Comparison-Header {
+  display: grid;
+  grid-template-columns: minmax(4rem, 12rem) 4rem minmax(4rem, 12rem); 
+  grid-template-rows: 1fr;
+  align-items: center;
+  justify-content: center;
+}
+.Red-Fighter-Name {
   color: var(--base08);
+  overflow-wrap: normal;
+}
+.VS {
+  color: var(--base0a);
+}
+.Blue-Fighter-Name {
+  color: var(--base0d);
+  overflow-wrap: normal;
+}
+
+.Fighter-Comparison-Element {
+  display: grid;
+  grid-template-columns: minmax(4rem, 12rem) 4rem minmax(4rem, 12rem); 
+  grid-template-rows: 1fr;
+  align-items: center;
+  justify-content: center;
 }
 
 .Saltybet-Message {
+  margin-top: 1rem;
+  margin-inline: 1rem;
   color: var(--base0b);
-}
-
-.Fighter-Stats-Zone {
-  display:flex;
-  color: var(--base05);
-}
-
-.Fighter-Prop-Names {
-  width: 20%;
-}
-
-.Fighter-Props {
-  width: 40%;
 }
