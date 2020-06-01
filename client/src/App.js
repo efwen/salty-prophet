@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import FighterComparison from './Components/FighterComparison';
-import SaltybetMessage from './Components/SaltybetMessage';
+import FighterComparison from './FighterComparison';
+import SaltybetMessage from './SaltybetMessage';
 
 function App() {
   return (
