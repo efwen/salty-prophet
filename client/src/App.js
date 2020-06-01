@@ -7,9 +7,9 @@ function App() {
   return (
     <div className="App">
       <div className="App-Header">
-        <img src="logo512.png" alt="salt" className="Header-Salt"/>
+        <img src="logo512.png" alt="salt" className="Header-Salt-Icon"/>
         <h1 className="App-Title">Salty Prophet</h1>
-        <img src="logo512.png" alt="salt" className="Header-Salt"/>
+        <img src="logo512.png" alt="salt" className="Header-Salt-Icon"/>
       </div>
       <div className="App-Body">
         <FighterComparison />

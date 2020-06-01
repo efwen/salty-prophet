@@ -31,16 +31,26 @@ class FighterComparisonHeader extends React.Component {
 
   render() {
     const waitingString = 'Waiting for Data...';
+
+    //truncation to keep some names under control
+    const maxNameLength = 20;
+    const truncate = (name, maxSize) => {
+      if(name.length > maxSize)
+        return name.substring(0, maxSize - 3) + '...';
+      else
+        return name;
+    }
+
     return (
       <div className="Fighter-Comparison-Header">
-        <h2 className="Red-Fighter-Name">
-          {this.state.redName || waitingString}
+        <h2 className="Fighter-Name Red-Fighter-Name">
+          {this.state.redName ? truncate(this.state.redName, maxNameLength) : waitingString}
         </h2>
         <h2 className="VS">
           VS
         </h2>
-        <h2 className="Blue-Fighter-Name">
-          {this.state.blueName || waitingString}
+        <h2 className="Fighter Name Blue-Fighter-Name">
+          {this.state.blueName ? truncate(this.state.blueName, maxNameLength) : waitingString}
         </h2>
       </div>
     )

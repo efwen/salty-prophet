@@ -43,11 +43,11 @@ a {
   height: 6rem;
 }
 
-.Header-Salt {
+.Header-Salt-Icon {
   max-width: 4rem;
   max-height: 4rem;
   margin-block: auto;
-  margin-inline: .5rem;
+  margin-inline: 3rem;
 }
 
 .App-Title {
@@ -58,7 +58,7 @@ a {
 .App-Body {
   background-color: var(--base00);
   color: var(--base07);
-  max-width: 30rem;
+  max-width: 40rem;
   min-height: 80vh;
   margin-inline: auto;
 }
@@ -75,26 +75,28 @@ a {
 
 .Fighter-Comparison-Header {
   display: grid;
-  grid-template-columns: minmax(4rem, 12rem) 4rem minmax(4rem, 12rem); 
+  grid-template-columns: minmax(4rem, 12rem) 10rem minmax(4rem, 12rem); 
   grid-template-rows: 1fr;
   align-items: center;
   justify-content: center;
 }
+.Fighter-Name {
+  overflow-wrap: normal;
+  margin: 0;
+}
 .Red-Fighter-Name {
   color: var(--base08);
-  overflow-wrap: normal;
 }
 .VS {
   color: var(--base0a);
 }
 .Blue-Fighter-Name {
   color: var(--base0d);
-  overflow-wrap: normal;
 }
 
 .Fighter-Comparison-Element {
   display: grid;
-  grid-template-columns: minmax(4rem, 12rem) 4rem minmax(4rem, 12rem); 
+  grid-template-columns: minmax(4rem, 12rem) 10rem minmax(4rem, 12rem); 
   grid-template-rows: 1fr;
   align-items: center;
   justify-content: center;
@@ -104,4 +106,5 @@ a {
   margin-top: 1rem;
   margin-inline: 1rem;
   color: var(--base0b);
+  font-weight: bold;
 }
