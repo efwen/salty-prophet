@@ -148,7 +148,7 @@ const getCurrentMessage = () => {
 };
 
 const getCurrentFighters = () => {
-  return currentMatch.fighters;
+  return currentMatch ? currentMatch.fighters : [null, null];
 };
 
 const getCurrentPots = () => {
