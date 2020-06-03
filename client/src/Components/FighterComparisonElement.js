@@ -19,11 +19,22 @@ class FighterComparisonElement extends React.Component {
 
   updateValues() {
     const fighterData = API.getFighterData();
+    const mode = API.getMode();
+
     if(fighterData && fighterData[0] && fighterData[1]) {
-      this.setState({
-        redValue: fighterData[0][this.props.propName],
-        blueValue: fighterData[1][this.props.propName],
-      });
+      // annoying special case for tier - not specific to a mode,
+      // so we have to access it differently
+      if(this.props.propName === 'tier') {
+        this.setState({
+          redValue: fighterData[0][this.props.propName],
+          blueValue: fighterData[1][this.props.propName],
+        })
+      } else {
+        this.setState({
+          redValue: fighterData[0][mode][this.props.propName],
+          blueValue: fighterData[1][mode][this.props.propName],
+        });
+      }
     } else {
       this.setState({redValue: null, blueValue: null});
     }

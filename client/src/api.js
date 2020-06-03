@@ -7,7 +7,6 @@ function callStateAPI() {
     .then(response => response.json())
     .then((response) => {
       APIState = response;
-      console.log(APIState);
     })
     .catch((err) => {
       console.error('Failed to get message from api!');
@@ -24,10 +23,16 @@ function getLastMessage() {
 }
 
 function getFighterData() {
-  return APIState ? APIState.fighterData : null;
+  console.log(APIState);
+  return APIState ? APIState.fighters : null;
+}
+
+function getMode() {
+  return APIState ? APIState.mode : null;
 }
 
 export default {
   getLastMessage,
   getFighterData,
+  getMode,
 }
