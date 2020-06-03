@@ -30,11 +30,15 @@ class FighterComparisonElement extends React.Component {
   }
 
   render() {
+    const replaceIfNull = (value, replace) => {
+      return (value !== null) ? value : replace;
+    }
+
     return (
       <div className="Fighter-Comparison-Element">
-        <div><b>{this.state.redValue || '---'}</b></div>
+        <div><b>{replaceIfNull(this.state.redValue, '---')}</b></div>
         <div><b>{this.props.name}</b></div>
-        <div><b>{this.state.blueValue || '---'}</b></div>
+        <div><b>{replaceIfNull(this.state.blueValue, '---')}</b></div>
       </div>
     )
   }
