@@ -94,10 +94,10 @@ function processModeSwitchData() {
 
 client.on('message', (channel, tags, message, self) => {
   if (tags['display-name'] === refBotName) {
-    currentMessage = message;
-    console.log(`${refBotName}: ${message}`);
-
     if(message.match(openMatchStr)) {
+      currentMessage = message;
+      console.log(`${refBotName}: ${message}`);
+
       if(currentPhase === phases.BETS_OPEN) {
         currentMatch = new MatchState();
         processOpenData(openDataPatt.exec(message))
@@ -110,11 +110,15 @@ client.on('message', (channel, tags, message, self) => {
             });
       }
     } else if(message.match(lockMatchStr)) {
+      currentMessage = message;
+      console.log(`${refBotName}: ${message}`);
       if(currentPhase === phases.MATCH_RUNNING) {
         processLockData(lockDataPatt.exec(message));
         currentPhase = phases.MATCH_OVER;
       }
     } else if(message.match(endMatchStr)) {
+      currentMessage = message;
+      console.log(`${refBotName}: ${message}`);
       if(currentPhase === phases.MATCH_OVER) {
         processEndMatchData(endDataPatt.exec(message));
 
@@ -134,8 +138,12 @@ client.on('message', (channel, tags, message, self) => {
               switchingModes = false;
             });
       }
-    } else if(message.match(modeSwitchStr)) {
-      if(currentPhase == 'end') {
+    }
+  } else if(tags['display-name'] === 'SaltyBet') {
+    if(message.match(modeSwitchStr)) {
+      if(currentPhase === phases.MATCH_OVER) {
+        currentMessage = message;
+        console.log(`SaltyBet: ${message}`);
         processModeSwitchData();
       }
     }
