@@ -20,6 +20,14 @@ const OccurenceCount = {
   default: 0,
 };
 
+const ModeStats = {
+  matchHistory: [MatchRef],
+  totalMatches: OccurenceCount,
+  totalWins: OccurenceCount,
+  currentStreak: {type: Int32, default: 0},
+  bestStreak: {type: Int32, default: 0},
+};
+
 const fighterSchema = new Schema({
   name: {
     type: String,
@@ -27,11 +35,9 @@ const fighterSchema = new Schema({
     immutable: true,
   },
   tier: TierEnum,
-  matchHistory: [MatchRef],
-  totalMatches: OccurenceCount,
-  totalWins: OccurenceCount,
-  currentStreak: {type: Int32, default: 0},
-  bestStreak: {type: Int32, default: 0},
+  matchmaking: ModeStats,
+  tournament: ModeStats,
+  exhibitions: ModeStats,
 });
 
 const FighterModel = mongoose.model('Fighter', fighterSchema);

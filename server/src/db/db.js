@@ -45,15 +45,11 @@ async function updateFighterByID(fighterId, toUpdate) {
 }
 
 async function updateFighters(fighterDocs, matchDoc) {
-  console.log('updating fighters!');
-  console.log(fighterDocs);
-  console.log(matchDoc);
-
-  const createUpdateObject = (fighterDoc, matchId, winnerId) => {
+  const createNewStats = (curStats, matchId, isWinner) => {
     // continue or reset streak depending on if the fighter won,
     // and which direction the streak was
-    let streak = fighterDoc.currentStreak;
-    if(fighterDoc._id === winnerId) {
+    let streak = curStats.currentStreak;
+    if(isWinner) {
       streak = (streak >= 0) ? streak + 1 : 1;
     } else {
       streak = (streak <= 0) ? streak - 1 : -1;
@@ -61,24 +57,28 @@ async function updateFighters(fighterDocs, matchDoc) {
 
     // if no recorded best streak yet, set to current streak (1 or -1)
     // otherwise set to greater of current best and new streak
-    const bestStreak = (fighterDoc.bestStreak == 0) ?
-          streak : Math.max(fighterDoc.bestStreak, streak);
+    const bestStreak = (curStats.bestStreak == 0) ?
+          streak : Math.max(curStats.bestStreak, streak);
 
     return {
-      matchHistory: fighterDoc.matchHistory.concat([matchId]),
-      totalMatches: fighterDoc.totalMatches + 1,
-      totalWins: (fighterDoc._id === winnerId) ?
-            fighterDoc.totalWins + 1 : fighterDoc.totalWins,
+      matchHistory: curStats.matchHistory.concat([matchId]),
+      totalMatches: curStats.totalMatches + 1,
+      totalWins: (isWinner) ? curStats.totalWins + 1 : curStats.totalWins,
       currentStreak: streak,
       bestStreak: bestStreak,
     };
   };
 
+  const redWon = fighterDocs[0]._id === matchDoc.winnerId;
+
+  const redUpdate = {};
+  const blueUpdate = {};
+  redUpdate[matchDoc.mode] = createNewStats(fighterDocs[0][matchDoc.mode], matchDoc._id, redWon);
+  blueUpdate[matchDoc.mode] = createNewStats(fighterDocs[1][matchDoc.mode], matchDoc._id, !redWon);
+
   return Promise.all([
-    updateFighterByID(fighterDocs[0]._id,
-        createUpdateObject(fighterDocs[0], matchDoc._id, matchDoc.winnerId)),
-    updateFighterByID(fighterDocs[1]._id,
-        createUpdateObject(fighterDocs[1], matchDoc._id, matchDoc.winnerId)),
+    updateFighterByID(fighterDocs[0]._id, redUpdate),
+    updateFighterByID(fighterDocs[1]._id, blueUpdate),
   ]);
 }
 
