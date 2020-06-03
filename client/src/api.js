@@ -23,7 +23,6 @@ function getLastMessage() {
 }
 
 function getFighterData() {
-  console.log(APIState);
   return APIState ? APIState.fighters : null;
 }
 
