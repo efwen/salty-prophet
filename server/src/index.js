@@ -6,8 +6,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
-const apiMessage = require('./api/message');
-const apiFighters = require('./api/fighters');
+const apiState = require('./api/state');
 
 const app = express();
 app.use(morgan(':req[X-Forwarded-For] :method :url :status :response-time ms :res[content-length]'));
@@ -20,8 +19,7 @@ app.get('/api', (req, res) => {
   });
 });
 
-app.use('/api/message', apiMessage);
-app.use('/api/fighters', apiFighters);
+app.use('/api/state', apiState);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

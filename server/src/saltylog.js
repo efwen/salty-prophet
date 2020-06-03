@@ -39,7 +39,7 @@ class MatchState {
 };
 
 // state variables
-let currentMessage = 'no messages yet';
+let lastMessage = 'no messages yet';
 let currentMode = modes.MATCHMAKING;
 let currentPhase = phases.BETS_OPEN;
 let currentMatch = new MatchState();
@@ -95,7 +95,7 @@ function processModeSwitchData() {
 client.on('message', (channel, tags, message, self) => {
   if (tags['display-name'] === refBotName) {
     if(message.match(openMatchStr)) {
-      currentMessage = message;
+      lastMessage = message;
       console.log(`${refBotName}: ${message}`);
 
       if(currentPhase === phases.BETS_OPEN) {
@@ -110,14 +110,14 @@ client.on('message', (channel, tags, message, self) => {
             });
       }
     } else if(message.match(lockMatchStr)) {
-      currentMessage = message;
+      lastMessage = message;
       console.log(`${refBotName}: ${message}`);
       if(currentPhase === phases.MATCH_RUNNING) {
         processLockData(lockDataPatt.exec(message));
         currentPhase = phases.MATCH_OVER;
       }
     } else if(message.match(endMatchStr)) {
-      currentMessage = message;
+      lastMessage = message;
       console.log(`${refBotName}: ${message}`);
       if(currentPhase === phases.MATCH_OVER) {
         processEndMatchData(endDataPatt.exec(message));
@@ -142,7 +142,7 @@ client.on('message', (channel, tags, message, self) => {
   } else if(tags['display-name'] === 'SaltyBet') {
     if(message.match(modeSwitchStr)) {
       if(currentPhase === phases.MATCH_OVER) {
-        currentMessage = message;
+        lastMessage = message;
         console.log(`SaltyBet: ${message}`);
         processModeSwitchData();
       }
@@ -151,25 +151,16 @@ client.on('message', (channel, tags, message, self) => {
 });
 
 // API requests
-const getCurrentMessage = () => {
-  return currentMessage;
-};
-
-const getCurrentFighters = () => {
-  return currentMatch ? currentMatch.fighters : [null, null];
-};
-
-const getCurrentPots = () => {
-  return currentMatch.pots;
-};
-
-const getCurrentMode = () => {
-  return currentMode;
+const getState = () => {
+  return {
+    mode: currentMode,
+    phase: currentPhase,
+    lastMessage: lastMessage,
+    fighters: currentMatch ? currentMatch.fighters : [null, null],
+    pots: currentMatch ? currentMatch.pots : [null, null],
+  };
 };
 
 module.exports = {
-  getCurrentMessage,
-  getCurrentFighters,
-  getCurrentPots,
-  getCurrentMode,
+  getState,
 };
