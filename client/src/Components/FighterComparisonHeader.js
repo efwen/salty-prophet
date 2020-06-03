@@ -1,5 +1,5 @@
 import React from 'react';
-import API from '../API';
+import API from '../api';
 
 class FighterComparisonHeader extends React.Component {
   constructor(props) {
