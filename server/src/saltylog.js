@@ -19,9 +19,10 @@ const lockDataPatt = /\$(\d{1,3}(?:,\d{1,3})*).*\$(\d{1,3}(?:,\d{1,3})*)/;
 const endDataPatt = /(Red|Blue)/;
 
 const phases = {
-  BETS_OPEN: 'bets open',
-  MATCH_RUNNING: 'match running',
-  MATCH_OVER: 'match over',
+  AWAITING_MATCH: 'Awaiting Match',
+  BETS_OPEN: 'Bets Open',
+  MATCH_RUNNING: 'Match Running',
+  MATCH_OVER: 'Match Over',
 };
 const modes = {
   MATCHMAKING: 'matchmaking',
@@ -41,7 +42,7 @@ class MatchState {
 // state variables
 let lastMessage = 'no messages yet';
 let currentMode = modes.MATCHMAKING;
-let currentPhase = phases.BETS_OPEN;
+let currentPhase = phases.AWAITING_MATCH;
 let currentMatch = new MatchState();
 let switchingModes = false;
 
@@ -98,11 +99,11 @@ client.on('message', (channel, tags, message, self) => {
       lastMessage = message;
       console.log(`${refBotName}: ${message}`);
 
-      if(currentPhase === phases.BETS_OPEN) {
+      if(currentPhase === phases.MATCH_OVER || currentPhase === phases.AWAITING_MATCH) {
         currentMatch = new MatchState();
         processOpenData(openDataPatt.exec(message))
             .then(() => {
-              currentPhase = phases.MATCH_RUNNING;
+              currentPhase = phases.BETS_OPEN;
             })
             .catch((err) => {
               currentMatch = null;
@@ -112,14 +113,14 @@ client.on('message', (channel, tags, message, self) => {
     } else if(message.match(lockMatchStr)) {
       lastMessage = message;
       console.log(`${refBotName}: ${message}`);
-      if(currentPhase === phases.MATCH_RUNNING) {
+      if(currentPhase === phases.BETS_OPEN) {
         processLockData(lockDataPatt.exec(message));
-        currentPhase = phases.MATCH_OVER;
+        currentPhase = phases.MATCH_RUNNING;
       }
     } else if(message.match(endMatchStr)) {
       lastMessage = message;
       console.log(`${refBotName}: ${message}`);
-      if(currentPhase === phases.MATCH_OVER) {
+      if(currentPhase === phases.MATCH_RUNNING) {
         processEndMatchData(endDataPatt.exec(message));
 
         db.saveMatch(currentMatch, currentMode)
@@ -134,14 +135,14 @@ client.on('message', (channel, tags, message, self) => {
             })
             .finally(() => {
               currentMatch = null;
-              currentPhase = phases.BETS_OPEN;
+              currentPhase = phases.MATCH_OVER;
               switchingModes = false;
             });
       }
     }
   } else if(tags['display-name'] === 'SaltyBet') {
     if(message.match(modeSwitchStr)) {
-      if(currentPhase === phases.MATCH_OVER) {
+      if(currentPhase === phases.MATCH_RUNNING) {
         lastMessage = message;
         console.log(`SaltyBet: ${message}`);
         processModeSwitchData();
