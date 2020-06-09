@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import FighterComparison from './Components/FighterComparison';
 import SaltybetMessage from './Components/SaltybetMessage';
+import ModePhaseDisplay from './Components/ModeDisplay';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <img src="logo512.png" alt="salt" className="Header-Salt-Icon"/>
       </div>
       <div className="App-Body">
+        <ModePhaseDisplay />
         <FighterComparison />
         <SaltybetMessage />
       </div>

@@ -68,12 +68,18 @@ a {
   color: var(--base03);
 }
 
+.Mode-Phase-Display {
+  color: var(--base04);
+  margin-bottom: 0;
+}
+
 .Fighter-Comparison {
   display: grid;
   grid-gap: 10px;
 }
 
 .Fighter-Comparison-Header {
+  margin: 0;
   display: grid;
   grid-template-columns: minmax(4rem, 12rem) 10rem minmax(4rem, 12rem); 
   grid-template-rows: 1fr;
@@ -89,9 +95,11 @@ a {
 }
 .VS {
   color: var(--base0a);
+  margin: 0;
 }
 .Blue-Fighter-Name {
   color: var(--base0d);
+  margin: 0;
 }
 
 .Fighter-Comparison-Element {

@@ -11,7 +11,7 @@ function callStateAPI() {
     .catch((err) => {
       console.error('Failed to get message from api!');
       console.error(err);
-      APIState.lastMessage = null;
+      APIState = null;
     });
 }
 
@@ -30,8 +30,13 @@ function getMode() {
   return APIState ? APIState.mode : null;
 }
 
+function getPhase() {
+  return APIState ? APIState.phase : null;
+}
+
 export default {
   getLastMessage,
   getFighterData,
   getMode,
+  getPhase,
 }
