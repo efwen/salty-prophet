@@ -16,6 +16,7 @@ class FighterComparison extends React.Component {
         <FighterComparisonElement name='Tier' propName='tier'/>
         <FighterComparisonElement name='Matches Recorded' propName='totalMatches'/>
         <FighterComparisonElement name='Wins' propName='totalWins'/>
+        <FighterComparisonElement name='WinRate' propName='winRate' />
         <FighterComparisonElement name='Current Streak'propName='currentStreak'/>
         <FighterComparisonElement name='Best Streak' propName='bestStreak'/>
       </div>

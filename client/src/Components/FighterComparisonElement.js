@@ -29,7 +29,14 @@ class FighterComparisonElement extends React.Component {
           redValue: fighterData[0][this.props.propName],
           blueValue: fighterData[1][this.props.propName],
         })
-      } else {
+      } 
+      else if(this.props.propName == 'winRate') {
+        this.setState({
+          redValue: fighterData[0]['wins'] / fighterData[0]['matches'] * 100,
+          blueValue: fighterData[1]['wins'] / fighterData[1]['matches'] * 100,
+        })
+      }
+      else {
         this.setState({
           redValue: fighterData[0][mode][this.props.propName],
           blueValue: fighterData[1][mode][this.props.propName],
