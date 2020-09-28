@@ -21,6 +21,10 @@ class FighterComparisonElement extends React.Component {
     const fighterData = API.getFighterData();
     const mode = API.getMode();
 
+    const getWinRateNum = (modeData) => {
+      return modeData['totalWins'] / modeData['totalMatches'] * 100;
+    }
+
     if(fighterData && fighterData[0] && fighterData[1]) {
       // annoying special case for tier - not specific to a mode,
       // so we have to access it differently
@@ -30,10 +34,10 @@ class FighterComparisonElement extends React.Component {
           blueValue: fighterData[1][this.props.propName],
         })
       } 
-      else if(this.props.propName == 'winRate') {
+      else if(this.props.propName === 'winRate') {
         this.setState({
-          redValue: fighterData[0]['wins'] / fighterData[0]['matches'] * 100,
-          blueValue: fighterData[1]['wins'] / fighterData[1]['matches'] * 100,
+          redValue: getWinRateNum(fighterData[0][mode]).toFixed(2) + '%',
+          blueValue: getWinRateNum(fighterData[1][mode]).toFixed(2) + '%',
         })
       }
       else {
