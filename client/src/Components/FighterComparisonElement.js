@@ -22,7 +22,11 @@ class FighterComparisonElement extends React.Component {
     const mode = API.getMode();
 
     const getWinRateNum = (modeData) => {
-      return modeData['totalWins'] / modeData['totalMatches'] * 100;
+      if(modeData['totalMatches'] == 0) {
+        return 0;
+      } else {
+        return modeData['totalWins'] / modeData['totalMatches'] * 100;
+      }
     }
 
     if(fighterData && fighterData[0] && fighterData[1]) {
